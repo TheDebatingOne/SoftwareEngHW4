@@ -1,9 +1,11 @@
+import java.util.concurrent.atomic.AtomicBoolean;
+
 public class MyReentrantLock implements Lock {
-    private boolean locked;
+    private AtomicBoolean locked;
     @Override
     public void acquire() {
-        while (!this.locked); //wait
-        this.locked = true;
+        while (!this.locked.get()); //wait
+        this.locked.set(true);
     }
 
     @Override
