@@ -1,16 +1,32 @@
 public class DateCalculator {
     public static Date addToDate(Date date, int num) {
-        // TODO: Add your code here...
+        if (num > 0)
+            return positiveAddToDate(date, num);
+        if (num < 0)
+            return negativeAddToDate(date, num);
+        return date;
+    }
+
+    public static Date positiveAddToDate(Date date, int num){
         int yearLength = yearLength(date.getYear());
-        if (num > yearLength)
-            return addToDate(naiveAddToDate(date, 0, 0, 1), num - yearLength);
         if (num > yearLength - dayNumber(date))
             return addToDate(new Date(0, 1, date.getYear() + 1), num - (yearLength - dayNumber(date)));
+
         int monthLength = monthLength(date.getMonth(), date.getYear());
-        if (num > monthLength)
-            return addToDate(naiveAddToDate(date, 0, 1, 0), num - monthLength);
         if (num > monthLength - date.getDay())
             return addToDate(new Date(0, date.getMonth() + 1, date.getYear()), num - (monthLength -date.getDay()));
+
+        return new Date(date.getDay() + num, date.getMonth(), date.getYear());
+    }
+
+    public static Date negativeAddToDate(Date date, int num){
+        if (-num >= dayNumber(date))
+            return addToDate(new Date(31, 12, date.getYear() - 1), num + dayNumber(date));
+
+        int prevMonthLength = monthLength(date.getMonth() - 1, date.getYear());
+        if (-num >= date.getDay())
+            return addToDate(new Date(prevMonthLength, date.getMonth() - 1, date.getYear()), num + date.getDay());
+
         return new Date(date.getDay() + num, date.getMonth(), date.getYear());
     }
 
@@ -39,9 +55,6 @@ public class DateCalculator {
             i++;
         }
         return dayNumber + date.getDay();
-    }
-    public static Date naiveAddToDate(Date date, int extraDays, int extraMonths, int extraYears){
-        return new Date(date.getDay() + extraDays, date.getMonth() + extraMonths, date.getYear() + extraYears);
     }
 }
 

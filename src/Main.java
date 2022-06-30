@@ -29,7 +29,7 @@ public class Main {
         if (num >= 0) {
             System.out.println("Adding " + num + " to " + date + " result: " + result);
         } else {
-           // System.out.println("Subtracting " + -num + " from " + date + " result: " + result);
+            System.out.println("Subtracting " + -num + " from " + date + " result: " + result);
         }
     }
 
