@@ -50,7 +50,6 @@ public class Main {
     private static void testPartB() {
         System.out.println("Testing part B...");
         for (int i = 0; i < 100; i++) {
-            System.out.println(i);
             Counter.count = 0;
             MyReentrantLock myLock = new MyReentrantLock();
             Thread t1 = new Thread(new OneAcquireWorker(myLock));
@@ -159,4 +158,3 @@ class TryWithResourcesAcquireWorker extends Worker {
         }
     }
 }
-
