@@ -3,6 +3,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class MyReentrantLock implements Lock {
     private AtomicBoolean locked; //the status of the lock
     private Thread owner; //the owner of the lock (aka the thread that locked him)
+    private int lockedness;
+
     @Override
     public void acquire() {
         while (!this.locked.get()); //wait until not locked
@@ -12,6 +14,16 @@ public class MyReentrantLock implements Lock {
 
     @Override
     public boolean tryAcquire() {
+        if (this.owner !=null && this.owner == Thread.currentThread()) {
+            this.lockedness++;
+            return true;
+        }
+        if (!this.locked.getAndSet(true))
+        {
+            this.owner = Thread.currentThread();
+            return true;
+        }
+        return false;
     }
 
     @Override
