@@ -1,2 +1,2 @@
-public class IllegalReleaseAttempt extends RuntimeException{
+public class IllegalReleaseAttempt extends IllegalMonitorStateException{
 }
