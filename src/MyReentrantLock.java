@@ -1,26 +1,27 @@
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class MyReentrantLock implements Lock {
+public class MyReentrantLock implements Lock, AutoCloseable{
     private AtomicBoolean locked; //the status of the lock
     private Thread owner; //the owner of the lock (aka the thread that locked him)
     private int lockedness;
 
+    public MyReentrantLock(){
+        owner = null;
+        locked = new AtomicBoolean(false);
+        lockedness = 0;
+    }
+
     @Override
     public void acquire() {
-        while (!this.locked.get()); //wait until not locked
-        this.locked.set(true); //locking
-        this.owner = Thread.currentThread(); //setting the new owner
+        while (!tryAcquire()) //wait until not locked
+            Thread.yield();
     }
 
     @Override
     public boolean tryAcquire() {
-        if (this.owner !=null && this.owner == Thread.currentThread()) {
-            this.lockedness++;
-            return true;
-        }
-        if (!this.locked.getAndSet(true))
-        {
-            this.owner = Thread.currentThread();
+        if (owner == Thread.currentThread() || locked.compareAndSet(false, true)) {
+            owner = Thread.currentThread();
+            lockedness++;
             return true;
         }
         return false;
@@ -28,10 +29,13 @@ public class MyReentrantLock implements Lock {
 
     @Override
     public void release() {
-        if (!this.locked.get() || !Thread.currentThread().equals(owner)) throw new IllegalReleaseAttempt();
-        //TODO: maybe compare thread IDs instead of equals?
-        this.locked.set(false); //releasing
-        this.owner = null;
+        if (lockedness == 0 || !Thread.currentThread().equals(owner))
+            throw new IllegalReleaseAttempt();
+        lockedness--;
+        if (lockedness == 0) {
+            locked.set(false); //releasing
+            owner = null;
+        }
     }
 
     @Override
