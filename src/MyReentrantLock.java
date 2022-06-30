@@ -1,4 +1,5 @@
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.lang.Thread;
 
 public class MyReentrantLock implements Lock, AutoCloseable{
     private AtomicBoolean locked; //the status of the lock
@@ -19,7 +20,7 @@ public class MyReentrantLock implements Lock, AutoCloseable{
 
     @Override
     public boolean tryAcquire() {
-        if (owner == Thread.currentThread() || locked.compareAndSet(false, true)) {
+        if (Thread.currentThread().equals(owner) || locked.compareAndSet(false, true)) {
             owner = Thread.currentThread();
             lockedness++;
             return true;
@@ -33,13 +34,13 @@ public class MyReentrantLock implements Lock, AutoCloseable{
             throw new IllegalReleaseAttempt();
         lockedness--;
         if (lockedness == 0) {
-            locked.set(false); //releasing
             owner = null;
+            locked.set(false); //releasing
+
         }
     }
-
     @Override
-    public void close() throws Exception {
+    public void close() {
         this.release();
     }
 

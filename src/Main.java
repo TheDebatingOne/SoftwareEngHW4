@@ -1,7 +1,7 @@
 public class Main {
     public static void main(String[] args) {
         testPartA();
-        //testPartB();
+        testPartB();
     }
 
     private static void testPartA() {
@@ -46,10 +46,11 @@ public class Main {
         System.out.println("Level with most occurrences of 2: " + LevelMostOccurrences.getLevelWithMostOccurrences(root, 2));
         System.out.println();
     }
-/*
+
     private static void testPartB() {
         System.out.println("Testing part B...");
         for (int i = 0; i < 100; i++) {
+            System.out.println(i);
             Counter.count = 0;
             MyReentrantLock myLock = new MyReentrantLock();
             Thread t1 = new Thread(new OneAcquireWorker(myLock));
@@ -96,10 +97,8 @@ public class Main {
             System.out.println("You should not reach here!");
         }
     }
-
- */
 }
-/*
+
 
 class Counter {
     public static int count = 0;
@@ -161,4 +160,3 @@ class TryWithResourcesAcquireWorker extends Worker {
     }
 }
 
- */
