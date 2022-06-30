@@ -36,7 +36,7 @@ public class MyReentrantLock implements Lock {
 
     @Override
     public void close() throws Exception {
-
+        this.release();
     }
 
 }
